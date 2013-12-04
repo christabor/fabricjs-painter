@@ -1,0 +1,433 @@
+<!doctype html>
+<html>
+<head>
+    <title>FabricJS Painter.</title>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+    <link href='http://fonts.googleapis.com/css?family=Cabin:400,700,400italic|Grand+Hotel' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+    * {
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Cabin', sans-serif;
+        font-size: 20px;
+        background: transparent url(img/pw_pattern.png);
+        color: #333;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Grand Hotel', cursive;
+    }
+    h1 {
+        font-size: 70px;
+    }
+    .copyright {
+        margin-top: 100px;
+        padding: 20px 0;
+        font-size: 70%;
+    }
+    .canvas-container {
+        border:1px solid #ccc;
+        background-color: #fff;
+        box-shadow: 0 0 10px #444;
+        margin: 4px 0;
+    }
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+    .label {
+        color: #000;
+        display: block;
+        margin: 10px 0;
+        text-align: left;
+    }
+    #chars {
+        background-color: #444;
+    }
+    #chars li {
+        text-align: center;
+        display: inline-block;
+        float:left;
+        margin: 0 3px 0 0;
+        font-size: 40px;
+        line-height: 100px;
+        background-color: #ccc;
+        color: #fff;
+        height: 120px;
+        width: 100px;
+        border:1px solid #ccc;
+    }
+    .brush-adjustor {
+        margin: 20px 0;
+        padding: 15px 20px;
+        background-color: #fff;
+        border-radius: 4px;
+        border-bottom: 2px solid #ccc;
+    }
+    .value-holder {
+        font-size: 10px;
+        background-color: #444;
+        color: #fff;
+        border-radius: 5px;
+        padding: 4px;
+        position: absolute;
+        text-align: center;
+        top: -40px;
+        width: 40px;
+        height: 22px;
+        right: -5px;
+    }
+    .ui-slider-handle:hover {
+        cursor: pointer;
+    }
+    sup.lead {
+        position: relative;
+        top: -20px;
+        left: -11px;
+        border-radius: 1000px;
+        background-color: darkOrange;
+        padding: 6px 8px;
+        text-align: center;
+        color: #fff;
+    }
+    #texture-brush-list {
+        background-color: #fff;
+        padding:10px;
+        border-radius: 4px;
+    }
+    .btn {
+        border: 1px solid #999;
+        border-bottom-width: 2px;
+        background-color: #333;
+        color: #fff;
+        text-shadow: 0 1px 1px #444;
+        margin: 4px 4px 0 0;
+    }
+    .btn:hover {
+        background-color: #555;
+        color: orange;
+    }
+    .btn.btn-active {
+        background-color: darkOrange;
+        border-color: inherit;
+        text-shadow: 0 1px 1px #000;
+        color: #fff;
+    }
+    .btn.btn-texture {
+        width: 80px;
+        height: 80px;
+        text-indent: -9999px;
+        margin: 4px;
+    }
+    .btn.btn-texture.btn-active {
+        border-color: orange;
+        border-width: 2px;
+    }
+    @media handheld, only screen and (max-width: 400px) {
+        h1 {
+            display: block;
+            font-size: 40px;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>Fabric<strong>Painter</strong> <sup class="lead">.JS</sup></h1>
+            </div>
+            <div class="col-md-6">
+                <br>
+                <p class="lead">A fun tool that adds brush types for FabricJS.</p>
+            </div>
+        </div>
+        <div class="row" role="main" id="workspace">
+            <div class="col-md-12">
+                <canvas id="c" width="1140" height="400"></canvas>
+            </div>
+            <div class="col-md-3">
+                <h3>Brush options</h3>
+                <div class="brush-adjustor">
+                    <span class="label">Brush color: <input type="color" id="adjust-color"></span>
+                </div>
+                <div class="brush-adjustor">
+                    <span class="label">Brush size: </span>
+                    <div class="slider" id="adjust-brush-size"><span class="value-holder">34</span></div>
+                </div>
+                <div class="brush-adjustor">
+                    <span class="label">Brush opacity: </span>
+                    <div class="slider" id="adjust-brush-opacity"><span class="value-holder">0.5</span></div>
+                </div>
+                <div class="brush-adjustor">
+                    <span class="label">Brush angle: </span>
+                    <div class="slider" id="adjust-angle"><span class="value-holder">90</span></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Brush types</h3>
+                <ul id="brush-list"></ul>
+                <h3>Texture brushes</h3>
+                <ul id="texture-brush-list"></ul>
+            </div>
+            <div class="col-md-3">
+                <h3>Other options</h3>
+                <div id="global-options">
+                    <a href="#" id="clear-canvas" class="btn btn-block">Clear Canvas</a>
+                    <a href="#" id="outline-shapes" class="toggleable btn btn-block">Outline shapes?</a>
+                    <a href="#" id="export-image" class="btn btn-block">Export image</a>
+                    <a href="#" id="toggle-drawing-mode" class="toggleable btn btn-block">Toggle drawing mode</a>
+                </div>
+            </div>
+        </div>
+        <div class="row copyright">
+            <hr>
+            <p>Stuff &amp; Things. MIT License. See Github repo for details. An Open-Source project by <a href="http://www.github.com/christabor" target="_blank" title="Github url for Chris Tabor">Chris Tabor</a>. <br>Pattern graphics by <a href="http://subtlepatterns.com" target="_blank">Subtle Patterns</a> (subject to separate license.)</p>
+        </div>
+    </div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/js/bootstrap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min.js"></script>
+    <script src="fabricjs-painter.js"></script>
+    <script type="text/javascript" defer>
+    $(document).ready(function(){
+
+        var painter = fabricPainter,
+        active_brush,
+        brush_functions,
+        brush_textures = ['tree_bark', 'geometry', 'pw_pattern', 'ricepaper_v3', 'retina_wood'];
+        global_options = $('#global-options'),
+        brush_list = $('#brush-list'),
+        texture_brush_list = $('#texture-brush-list'),
+
+        sliderMap = [
+        {
+            id: '#adjust-brush-opacity',
+            value: 0.8,
+            min: 0.1,
+            max: 1,
+            step: 0.1,
+            fn: painter.brush_globals.set,
+            prop: 'opacity'
+        },
+        {
+            id: '#adjust-angle',
+            value: 90,
+            min: -180,
+            max: 180,
+            step: 1,
+            fn: painter.brush_globals.set,
+            prop: 'angle'
+        },
+        {
+            id: '#adjust-brush-size',
+            value: 50,
+            min: 1,
+            max: 100,
+            step: 1,
+            fn: painter.brush_globals.set,
+            prop: 'size'
+        }
+        ];
+
+        // map sliders to slider instantiation
+        $(sliderMap).each(function(k, slider){
+            var s = slider;
+            $(s.id).slider({
+                min: s.min,
+                max: s.max,
+                step: s.step,
+                slide: function(event, ui) {
+                    $(this).find('span.value-holder').text(ui.value);
+                    if(s.fn !== null && s.fn) {
+                        s.fn(s.prop, ui.value);
+                    }
+                }
+            });
+        });
+
+        // ----------------------------------
+        // ADVANCED BRUSHES
+        // ----------------------------------
+
+        function toggleDrawingMode() {
+            if(painter.brush_globals.is_drawing) {
+                brush_list.hide();
+            } else {
+                brush_list.show();
+            }
+            return;
+        }
+
+        brush_list.on('click.active-btns', '.btn', function(){
+            $(this).parent().find('.btn').not($(this)).removeClass('btn-active');
+            $(this).addClass('btn-active');
+        });
+
+        texture_brush_list.on('click.active-btns', '.btn', function(){
+            $(this).parent().find('.btn').not($(this)).removeClass('btn-active');
+            $(this).addClass('btn-active');
+            if(!painter.brush_globals.is_drawing) {
+                $('#toggle-drawing-mode').trigger('click');
+            }
+        });
+
+        global_options.on('click.active-btns', '.btn', function(){
+            if($(this).hasClass('toggleable')) {
+                $(this).toggleClass('btn-active');
+            }
+        });
+
+        $('#adjust-color').on('change', function(e){
+            painter.brush_globals.color = e.currentTarget.value;
+            e.preventDefault();
+        });
+
+        $('#clear-canvas').on('click', function(e){
+            e.preventDefault();
+            canvas.clear();
+        });
+
+        $('#toggle-drawing-mode').on('click', function(e){
+            e.preventDefault();
+            painter.toggleProperty('is_drawing');
+            toggleDrawingMode();
+        });
+
+        $('#outline-shapes').on('click', function(e){
+            e.preventDefault();
+            painter.toggleProperty('outline');
+        });
+
+        $('#export-image').on('click', function(e){
+            e.preventDefault();
+            window.open(canvas.toDataURL('png'));
+        });
+
+        // ----------------------------------
+        // Canvas init, etc
+        // ----------------------------------
+
+        canvas = new fabric.Canvas('c');
+        canvas.selection = false;
+
+        // proxy all functions to an object so we can call
+        // them with specific arguments specified
+        brush_functions = {
+            'makeRandomShapeArrangment': function(data) {
+                painter.makeRandomShapeArrangment(canvas.width / 4, 'shape', 'monotone');
+            },
+            'drawDnaBrush': function(data) {
+                painter.drawDnaBrush(data);
+            },
+            'addLineSwirls': function(data) {
+                painter.addLineSwirls(data);
+            },
+            'addRandomTriangle': function(data) {
+                painter.addRandomTriangle(data);
+            },
+            'addRandomRect': function(data) {
+                painter.addRandomRect(data, 10);
+            },
+            'drawBubblesSimple': function(data) {
+                painter.drawBubblesSimple(data);
+            },
+            'drawTree': function(data) {
+                painter.drawTree(data, 10);
+            },
+            'drawInvertedTree': function(data) {
+                painter.drawInvertedTree(data, 5);
+            },
+            'drawCopyCat': function(data) {
+                painter.drawCopyCat(data);
+            },
+            'drawEchoes': function(data) {
+                painter.drawEchoes(data);
+            },
+            'drawEerieFollower': function(data) {
+                painter.drawEerieFollower(data, 2000);
+            },
+            'drawStarLine': function(data) {
+                painter.drawStarLine(data);
+            },
+            'drawDiamondCross': function(data) {
+                painter.drawDiamondCross(data);
+            },
+            'drawGlassStorm': function(data) {
+                painter.drawGlassStorm(data);
+            },
+            'drawSporadicLines': function(data) {
+                painter.drawSporadicLines(data);
+            },
+            drawGraffiti: function(data) {
+                painter.drawGraffiti(data);
+            }
+        };
+
+        // populate the list with brushes
+        for(var name in brush_functions) {
+            var item = $('<li><a></a></li>')
+            .find('a')
+            .addClass('btn')
+            .attr('id', name)
+            .text(name);
+            brush_list.append(item);
+        }
+
+        // populate texture brush
+        // list with array of texture files
+        $(brush_textures).each(function(k, texture_name){
+            var item = $('<li><a></a></li>')
+            .find('a')
+            .addClass('btn btn-texture')
+            .attr('id', texture_name)
+            .css('background', 'url(img/' + texture_name + '.png)')
+            .text(texture_name.replace('_', ' '));
+            texture_brush_list.append(item);
+        });
+
+        brush_list.find('a').on('click.brush-type', function(){
+            var brush = $(this).text();
+
+            // trigger brush
+            active_brush = brush_functions[brush];
+            return;
+        });
+
+        texture_brush_list.find('a').on('click.texture-brush-type', function(){
+            var texture = $(this).text();
+
+            // always set to true
+            painter.brush_globals.is_drawing = true;
+
+            // toggle controls
+            toggleDrawingMode();
+            painter.triggerPaintTextureMode('img/' + texture.replace(' ', '_') + '.png');
+
+            // remove other brushes
+            active_brush = null;
+            return;
+        });
+
+        // trigger the first brush
+        brush_list.find('a').last().trigger('click');
+
+        canvas.on('mouse:move', function(data){
+            // but only if drawing mode is disabled
+            if(!painter.brush_globals.is_drawing) {
+                active_brush(data);
+            }
+
+            return;
+        });
+
+        canvas.renderAll();
+
+    });
+</script>
+</body>
+</html>
