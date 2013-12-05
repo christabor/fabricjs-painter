@@ -5,8 +5,12 @@
 
 var fabricPainter = {};
 fabricPainter.brush_globals = {
-	set: function(prop, val) {
-		fabricPainter.brush_globals[prop] = val;
+	prop: function(prop, val) {
+		if(val) {
+			return fabricPainter.brush_globals[prop] = val;
+		} else {
+			return fabricPainter.brush_globals[prop];
+		}
 	},
 	size: 50,
 	opacity: 0.2,
