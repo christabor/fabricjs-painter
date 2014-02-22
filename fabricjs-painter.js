@@ -7,7 +7,7 @@ var fabricPainter = {};
 fabricPainter.brush_globals = {
 	prop: function(prop, val) {
 		if(val) {
-			return fabricPainter.brush_globals[prop] = val;
+			fabricPainter.brush_globals[prop] = val;
 		} else {
 			return fabricPainter.brush_globals[prop];
 		}
@@ -289,13 +289,13 @@ fabricPainter.drawBubblesSimple = function(data) {
 };
 
 fabricPainter.drawBubblesComplex = function(data) {
-	painter.makeShapeClump(new fabric.Rect({
-		width: Math.random() * painter.brush_globals.size,
-		height: Math.random() * painter.brush_globals.size,
+	fabricPainter.makeShapeClump(new fabric.Rect({
+		width: Math.random() * fabricPainter.brush_globals.size,
+		height: Math.random() * fabricPainter.brush_globals.size,
 		top: data.e.layerY,
 		left: data.e.layerX,
-		opacity: painter.brush_globals.opacity,
-		fill: painter.brush_globals.color
+		opacity: fabricPainter.brush_globals.opacity,
+		fill: fabricPainter.brush_globals.color
 	}), 4);
 	return;
 };
