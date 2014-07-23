@@ -245,6 +245,11 @@
                     $(this).find('span.value-holder').text(ui.value);
                     if(s.fn !== null && s.fn) {
                         s.fn(s.prop, ui.value);
+                        toggleDrawingMode();
+                        // retrigger texture load for brush resizing
+                        if(!painter.brush_globals.is_drawing) return;
+                        $('#texture-brush-list')
+                        .find('.btn-active').click();
                     }
                 }
             });
