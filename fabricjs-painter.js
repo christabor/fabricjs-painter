@@ -42,7 +42,6 @@ fabricPainter.toggleProperty = function(property) {
 	} else {
 		fabricPainter.brush_globals[property] = true;
 	}
-	return;
 };
 
 fabricPainter.triggerPaintTextureMode = function(pattern_file_name) {
@@ -62,7 +61,6 @@ fabricPainter.triggerPaintTextureMode = function(pattern_file_name) {
 	// defer to object for brush type
 	fabricPainter.brush_globals.current_brush = texture_pattern_brush;
 	canvas.freeDrawingBrush = fabricPainter.brush_globals.current_brush;
-	return;
 };
 
 fabricPainter.addSquare = function(data, top, left, angle, height, width) {
@@ -81,7 +79,6 @@ fabricPainter.addSquare = function(data, top, left, angle, height, width) {
 		opacity: fabricPainter.brush_globals.opacity
 	}));
 	canvas.renderAll();
-	return;
 };
 
 fabricPainter.addCircle = function(top, left, radius) {
@@ -99,7 +96,6 @@ fabricPainter.addCircle = function(top, left, radius) {
 		opacity: fabricPainter.brush_globals.opacity
 	}));
 	canvas.renderAll();
-	return;
 };
 
 fabricPainter.addTriangle = function(data, angle, height, width, top, left) {
@@ -116,7 +112,6 @@ fabricPainter.addTriangle = function(data, angle, height, width, top, left) {
 		stroke: (fabricPainter.brush_globals.outline ? fabricPainter.brush_globals.color : 'none'),
 		fill: (fabricPainter.brush_globals.outline ? 'none' : fabricPainter.brush_globals.color)
 	}));
-	return;
 };
 
 fabricPainter.addLine = function(data, angle, height, top, left, width) {
@@ -132,7 +127,6 @@ fabricPainter.addLine = function(data, angle, height, top, left, width) {
 		opacity: Math.random() * fabricPainter.brush_globals.opacity,
 		fill: fabricPainter.brush_globals.color
 	}));
-	return;
 };
 
 fabricPainter.getRandomColor = function(color_type) {
@@ -151,7 +145,6 @@ fabricPainter.getRandomColor = function(color_type) {
 	} else {
 		return color.toHex();
 	}
-	return;
 };
 
 // ----------------------------------
@@ -163,7 +156,6 @@ fabricPainter.drawTree = function(data, max_iterations){
 	for(var i = 0; i <= max_iterations; i++) {
 		fabricPainter.addCircle(data.e.layerY + (i * i), data.e.layerX, i);
 	}
-	return;
 };
 
 fabricPainter.drawInvertedTree = function(data, max_iterations){
@@ -171,7 +163,6 @@ fabricPainter.drawInvertedTree = function(data, max_iterations){
 	for(var i = 0; i <= max_iterations; i++) {
 		fabricPainter.addCircle(data.e.layerY + (i * (i + i)), data.e.layerX, max_iterations - i);
 	}
-	return;
 };
 
 fabricPainter.drawCopyCat = function(data) {
@@ -181,7 +172,6 @@ fabricPainter.drawCopyCat = function(data) {
 	var size = fabricPainter.brush_globals.size + 40;
 	fabricPainter.addCircle(data.e.layerY - size, data.e.layerX - size, fabricPainter.brush_globals.size/3);
 	fabricPainter.addCircle(data.e.layerY + size, data.e.layerX + size, fabricPainter.brush_globals.size/3);
-	return;
 };
 
 fabricPainter.drawEerieFollower = function(data, timeout) {
@@ -190,7 +180,6 @@ fabricPainter.drawEerieFollower = function(data, timeout) {
 	setTimeout(function(){
 		fabricPainter.addCircle(data.e.layerY+100, data.e.layerX, fabricPainter.brush_globals.size/3);
 	}, (timeout > 1000 ? timeout: 1000));
-	return;
 };
 
 fabricPainter.drawGraffiti = function(data) {
@@ -207,7 +196,6 @@ fabricPainter.drawGraffiti = function(data) {
 		// randomize placement of second "drip"
 		fabricPainter.addLine(data, 0, bar_height, data.e.layerY + (bar_height / 2), data.e.layerX, Math.random() * max_bar_width);
 	}
-	return;
 };
 
 fabricPainter.makeRandomShapeArrangment = function(size, shape, color_type) {
@@ -227,7 +215,6 @@ fabricPainter.makeRandomShapeArrangment = function(size, shape, color_type) {
 		}));
 	}
 	canvas.renderAll();
-	return;
 };
 
 fabricPainter.makeShapeClump = function(shape, max_iterations) {
@@ -252,12 +239,10 @@ fabricPainter.makeShapeClump = function(shape, max_iterations) {
 		}));
 	}
 	canvas.renderAll();
-	return;
 };
 
 fabricPainter.addRandomTriangle = function(data) {
 	fabricPainter.addTriangle(data, Math.random() * 360, Math.random() * fabricPainter.brush_globals.size, Math.random() * fabricPainter.brush_globals.size, null, null);
-	return;
 };
 
 fabricPainter.addLineSwirls = function(data) {
@@ -265,7 +250,6 @@ fabricPainter.addLineSwirls = function(data) {
 	for(var i = 1; i <= Math.random()*10; i++) {
 		fabricPainter.addLine(data, Math.random() * 360/i, null, null, null, null);
 	}
-	return;
 };
 
 fabricPainter.drawDnaBrush = function(data) {
@@ -273,19 +257,16 @@ fabricPainter.drawDnaBrush = function(data) {
 	for(var i = 1; i <= Math.random()*5; i++) {
 		fabricPainter.addLineSwirls(data, 1, fabricPainter.brush_globals.size, null, null, null);
 	}
-	return;
 };
 
 fabricPainter.addRandomRect = function(data, angle) {
 	fabricPainter.addSquare(data, data.e.layerY, data.e.layerX, angle, Math.random() * fabricPainter.brush_globals.size, Math.random() * fabricPainter.brush_globals.size);
-	return;
 };
 
 fabricPainter.drawBubblesSimple = function(data) {
 	for(var i = 0; i <= 2; i++) {
 		fabricPainter.addCircle(data.e.layerY + Math.random(), data.e.layerX + Math.random(), fabricPainter.brush_globals.size);
 	}
-	return;
 };
 
 fabricPainter.drawBubblesComplex = function(data) {
@@ -297,7 +278,6 @@ fabricPainter.drawBubblesComplex = function(data) {
 		opacity: fabricPainter.brush_globals.opacity,
 		fill: fabricPainter.brush_globals.color
 	}), 4);
-	return;
 };
 
 fabricPainter.drawEchoes = function(data) {
@@ -305,7 +285,6 @@ fabricPainter.drawEchoes = function(data) {
 	for(var i = 0; i <= 5; i++) {
 		fabricPainter.addCircle(data.e.layerY + (i * i * i), data.e.layerX + (i * i * i), fabricPainter.brush_globals.size);
 	}
-	return;
 };
 
 fabricPainter.drawGlassStorm = function(data) {
@@ -320,7 +299,6 @@ fabricPainter.drawGlassStorm = function(data) {
 		left: data.e.layerX
 	});
 	canvas.add(path);
-	return;
 };
 
 fabricPainter.drawSporadicLines = function(data) {
@@ -343,7 +321,6 @@ fabricPainter.drawSporadicLines = function(data) {
 		// empty array
 		fabricPainter.paint_settings.points = [];
 	}
-	return;
 };
 
 fabricPainter.drawDiamondCross = function(data) {
@@ -352,7 +329,6 @@ fabricPainter.drawDiamondCross = function(data) {
 	var f = Math.random() * canvas.width / 2;
 	fabricPainter.addSquare(data, data.e.layerY, Math.random() * f, 45, f/4, f/4);
 	fabricPainter.addSquare(data, Math.random() * f, data.e.layerX, 45, f/4, f/4);
-	return;
 };
 
 fabricPainter.drawStarLine = function(data) {
@@ -361,5 +337,4 @@ fabricPainter.drawStarLine = function(data) {
 	for(var i = 0; i <= 5; i++) {
 		fabricPainter.addLine(data, Math.random()*360, canvas.height/2, null, null, null);
 	}
-	return;
 };
